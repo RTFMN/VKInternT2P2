@@ -3,20 +3,23 @@
     "version": "1.0.0",
     "description": "Automated tests for GitHub/GitLab issues using Playwright",
     "main": "index.js",
+    "type": "module",
     "scripts": {
-      "test": "playwright test",
-      "allure:generate": "allure generate allure-results --clean -o allure-report",
-      "allure:open": "allure open allure-report"
+        "test": "playwright test",
+        "allure:generate": "allure generate allure-results --clean -o allure-report",
+        "allure:open": "allure open allure-report"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-      "axios": "^0.21.1"
+        "@octokit/rest": "^21.0.1",
+        "axios": "^1.7.2"
     },
     "devDependencies": {
-      "@playwright/test": "^1.15.0",
-      "allure-playwright": "^2.0.0-beta.11",
-      "dotenv": "^10.0.0",
-      "typescript": "^4.3.5"
+        "@playwright/test": "^1.15.0",
+        "@types/node": "^20.14.11",
+        "allure-playwright": "^2.0.0-beta.11",
+        "dotenv": "^10.0.0",
+        "typescript": "^4.3.5"
     }
-  }
+}

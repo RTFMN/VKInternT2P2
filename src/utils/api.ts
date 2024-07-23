@@ -1,41 +1,63 @@
-import axios from 'axios';
+import { Octokit } from "@octokit/rest";
+import dotenv from 'dotenv';
 
-const BASE_URL = 'https://api.github.com';
-const TOKEN = 'YOUR_GITHUB_TOKEN';
+dotenv.config();
 
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    Authorization: `token ${TOKEN}`,
-    Accept: 'application/vnd.github.v3+json'
-  }
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
 });
 
-export const createIssue = async (owner: string, repo: string, title: string, body: string, labels: string[], assignees: string[]) => {
-  const response = await api.post(`/repos/${owner}/${repo}/issues`, {
-    title,
-    body,
-    labels,
-    assignees
+export const createIssue = async (owner: string, repo: string, title: string, body: string, labels: string[]) => {
+  const response = await octokit.request('POST /repos/{owner}/{repo}/issues', {
+    owner: owner,
+    repo: repo,
+    title: title,
+    body: body,
+    labels: labels,
+    headers: {
+      "accept": "application/vnd.github+json",
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
   });
   return response.data;
 };
 
 export const getIssues = async (owner: string, repo: string) => {
-  const response = await api.get(`/repos/${owner}/${repo}/issues`);
+  const response = await octokit.request('GET /repos/{owner}/{repo}/issues', {
+    owner: owner,
+    repo: repo,
+    headers: {
+      "accept": "application/vnd.github+json",
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  });
   return response.data;
 };
 
 export const editIssue = async (owner: string, repo: string, issueNumber: number, body: string) => {
-  const response = await api.patch(`/repos/${owner}/${repo}/issues/${issueNumber}`, {
-    body
-  });
+  const response = await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+    owner: owner,
+    repo: repo,
+    issue_number: issueNumber,
+    body: body,
+    headers: {
+      "accept": "application/vnd.github+json",
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  })
   return response.data;
 };
 
 export const closeIssue = async (owner: string, repo: string, issueNumber: number) => {
-  const response = await api.patch(`/repos/${owner}/${repo}/issues/${issueNumber}`, {
-    state: 'closed'
-  });
+  const response = await octokit.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+    owner: owner,
+    repo: repo,
+    issue_number: issueNumber,
+    state: "closed",
+    headers: {
+      "accept": "application/vnd.github+json",
+      'X-GitHub-Api-Version': '2022-11-28'
+    }
+  })
   return response.data;
 };
